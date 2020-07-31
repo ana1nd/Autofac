@@ -6,16 +6,53 @@ using System.Threading.Tasks;
 
 namespace AutofacTutorial1
 {
+    /// <summary>
+    /// interface to write output to the console
+    /// </summary>
+    public interface IOutput
+    {
+        void Write(string content);
+    }
+
+    /// <summary>
+    /// contains implementation of IOutput
+    /// </summary>
+    public class ConsoleOutput : IOutput
+    {
+        public void Write(string content)
+        {
+            Console.WriteLine(content);
+        }
+    }
+
+    /// <summary>
+    /// writes date
+    /// </summary>
+    public interface IDateWriter
+    {
+        void WriteDate();
+    }
+
+    public class TodayWriter : IDateWriter
+    {
+        IOutput output;
+        
+        public TodayWriter(ConsoleOutput consoleOutput)
+        {
+            this.output = consoleOutput;
+        }
+        public void WriteDate()
+        {
+            this.output.Write(DateTime.Today.ToString());
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
-            // The code provided will print ‘Hello World’ to the console.
-            // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
-            Console.WriteLine("Hello World!");
-            Console.ReadKey();
-
-            // Go to http://aka.ms/dotnet-get-started-console to continue learning how to build a console app! 
+            TodayWriter todayWriter = new TodayWriter(new ConsoleOutput());
+            todayWriter.WriteDate();
         }
     }
 }
