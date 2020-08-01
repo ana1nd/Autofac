@@ -36,10 +36,10 @@ namespace AutofacTutorial1
     public class TodayWriter : IDateWriter
     {
         IOutput output;
-        
-        public TodayWriter(ConsoleOutput consoleOutput)
+
+        public TodayWriter(IOutput output)
         {
-            this.output = consoleOutput;
+            this.output = output;
         }
         public void WriteDate()
         {
