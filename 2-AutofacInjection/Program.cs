@@ -89,6 +89,38 @@ namespace AutofacTutorial1
             builder.Register(c => new TodayWriter()).As<IDateWriter>();
             WriteDate();
             #endregion
+
+            #region Important points section
+            Console.WriteLine("1. only concrete type components can be registered via reflection type components. Since behind the scene Autofac is creating instance which cant only be created for concrete type and not abstract type/classes");
+            Console.WriteLine("2. to expose components we have to tell Autofac which services that component exposes.");
+            Console.WriteLine();
+            #endregion
+
+            Console.WriteLine("Exposing component as a service as well along-with other services");
+            #region exposing a component as a service as well as using default service. We can now resolve as any of the two
+            builder.RegisterType<TodayWriter>().AsSelf().As<IDateWriter>();
+            WriteDate4();
+            #endregion
+        }
+
+        public static void WriteDate4()
+        {
+            using (var scope = Container.BeginLifetimeScope())
+            {
+                // this resolves the dependencies and return TodayWriter object
+                var writer = scope.Resolve<IDateWriter>();
+                writer.WriteDate();
+                writer.WriteSpecificDate(DateTime.Now);
+                Console.WriteLine();
+
+                // resolve the service as todaywriter since we register as both component and service
+                writer = scope.Resolve<TodayWriter>();
+                writer.WriteDate();
+
+                // to add more, add relevant methods in the Interface
+                writer.WriteSpecificDate(DateTime.Now);
+                Console.WriteLine();
+            }
         }
 
         public static void WriteDate()
@@ -104,6 +136,5 @@ namespace AutofacTutorial1
                 Console.WriteLine();
             }
         }
-
     }
 }
